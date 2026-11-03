@@ -61,24 +61,24 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onSelectCategory }
     const isDesktop = window.matchMedia('(min-width: 768px)').matches;
 
     if (isDesktop) {
-      // Snappy pinned sequential reveal: cards appear one after another without heavy lag
+      // Pinned scroll-synchronized sequential reveal: cards appear one after another
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: 'top top',
-          end: '+=130%',
+          end: '+=160%',
           pin: true,
-          scrub: 0.35,
+          scrub: 0.8,
         },
       });
 
-      gsap.set([card1, card2, card3], { opacity: 0, y: 35 });
+      gsap.set([card1, card2, card3], { opacity: 0, y: 40 });
       if (header) gsap.set(header, { opacity: 0, y: 20 });
 
-      tl.to(header, { opacity: 1, y: 0, duration: 0.35 })
-        .to(card1, { opacity: 1, y: 0, duration: 0.55 }, '+=0.05')
-        .to(card2, { opacity: 1, y: 0, duration: 0.55 }, '+=0.1')
-        .to(card3, { opacity: 1, y: 0, duration: 0.55 }, '+=0.1');
+      tl.to(header, { opacity: 1, y: 0, duration: 0.4 })
+        .to(card1, { opacity: 1, y: 0, duration: 0.7 }, '+=0.1')
+        .to(card2, { opacity: 1, y: 0, duration: 0.7 }, '+=0.2')
+        .to(card3, { opacity: 1, y: 0, duration: 0.7 }, '+=0.2');
 
       return () => {
         tl.kill();
@@ -87,34 +87,24 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onSelectCategory }
         });
       };
     } else {
-      // Mobile: Fluid, natural intersection triggers without scroll locking
+      // Mobile: Individual scroll-triggered reveals as user scrolls through each card
       const cards = [card1, card2, card3];
-      const anims: gsap.core.Tween[] = [];
+      const triggers: ScrollTrigger[] = [];
 
       cards.forEach((card) => {
-        const anim = gsap.fromTo(
-          card,
-          { opacity: 0, y: 25 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.5,
-            ease: 'power2.out',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 88%',
-              toggleActions: 'play none none none',
-            },
-          }
-        );
-        anims.push(anim);
+        gsap.set(card, { opacity: 0, y: 30 });
+        const st = ScrollTrigger.create({
+          trigger: card,
+          start: 'top 85%',
+          onEnter: () => {
+            gsap.to(card, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' });
+          },
+        });
+        triggers.push(st);
       });
 
       return () => {
-        anims.forEach((a) => {
-          a.scrollTrigger?.kill();
-          a.kill();
-        });
+        triggers.forEach((t) => t.kill());
       };
     }
   }, []);
@@ -122,8 +112,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onSelectCategory }
   return (
     <section
       ref={sectionRef}
-      className="relative w-full min-h-screen bg-slate-950 flex flex-col justify-center items-center overflow-hidden py-24 sm:py-32 px-4 sm:px-6 lg:px-8 z-20"
-      style={{ touchAction: 'pan-y' }}
+      className="relative w-full min-h-screen bg-slate-950 flex flex-col justify-center items-center overflow-hidden py-20 px-4 sm:px-6 lg:px-8 z-20"
     >
       {/* Background Architectural Visual matching user reference */}
       <img
@@ -142,7 +131,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onSelectCategory }
           Crafted for Every Lifestyle
         </h2>
         <p className="mt-3 text-xs sm:text-sm text-slate-300 font-light max-w-md mx-auto">
-          Explore our signature residential collections designed for contemporary living.
+          Scroll down to discover each signature collection designed for modern living.
         </p>
       </div>
 
