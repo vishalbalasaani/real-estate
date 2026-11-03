@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Star, Building2, Waves, ArrowUpRight, X, Sparkles, ChevronUp } from 'lucide-react';
+import { Star, Building2, Waves, ArrowUpRight, X } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -16,7 +16,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onSelectCategory }
   const card3Ref = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
 
-  // Track which cards have their text revealed (empty by default so only photos show)
+  // Track which cards have their text drawer revealed
   const [revealedCards, setRevealedCards] = useState<Record<string, boolean>>({});
 
   const touchStartMap = useRef<Record<string, { x: number; y: number }>>({});
@@ -29,7 +29,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onSelectCategory }
       icon: Star,
       iconColor: 'text-[#c69a68]',
       title: 'Luxury Residences',
-      subtitle: 'Signature High-Rise Sanctuaries',
+      subtitle: 'Signature High-Rise',
       description:
         'Bespoke high-rise residences crafted with Italian finishes, panoramic skyline vistas, and white-glove concierge services.',
       metric: '910 - 1,500 SQ FT',
@@ -41,7 +41,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onSelectCategory }
       icon: Building2,
       iconColor: 'text-[#60a5fa]',
       title: 'Urban Living',
-      subtitle: 'Contemporary Boutique Lofts',
+      subtitle: 'Boutique Lofts',
       description:
         'Dynamic, connected urban lofts designed for modern professionals, featuring co-working lounges and private wellness spaces.',
       metric: '190+ UNITS · 501K SQ FT',
@@ -53,7 +53,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onSelectCategory }
       icon: Waves,
       iconColor: 'text-[#38bdf8]',
       title: 'Waterfront Homes',
-      subtitle: 'Tranquil Lakefront Estates',
+      subtitle: 'Lakefront Estates',
       description:
         'Tranquil lakefront estates offering uninterrupted water views, private promenades, and serene reflecting pools.',
       metric: '910 - 3,200 SQ FT',
@@ -77,18 +77,15 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onSelectCategory }
 
     if (!section || !card1 || !card2 || !card3) return;
 
-    // Reset revealed text when user scrolls away to another section (in either direction)
-    // so when they scroll back, only the images are showing!
+    // Reset revealed text when user scrolls away to another section
     const stReset = ScrollTrigger.create({
       trigger: section,
       start: 'top bottom',
       end: 'bottom top',
       onLeave: () => {
-        // Scrolled down past this section into next section
         setRevealedCards({});
       },
       onLeaveBack: () => {
-        // Scrolled up past this section into previous section
         setRevealedCards({});
       },
     });
@@ -96,24 +93,24 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onSelectCategory }
     const isDesktop = window.matchMedia('(min-width: 768px)').matches;
 
     if (isDesktop) {
-      // Pinned scroll-synchronized sequential reveal: cards enter view one after another
+      // Pinned sequential reveal on desktop
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: 'top top',
-          end: '+=140%',
+          end: '+=130%',
           pin: true,
           scrub: 0.6,
         },
       });
 
-      gsap.set([card1, card2, card3], { opacity: 0, y: 35 });
-      if (header) gsap.set(header, { opacity: 0, y: 20 });
+      gsap.set([card1, card2, card3], { opacity: 0, y: 30 });
+      if (header) gsap.set(header, { opacity: 0, y: 15 });
 
       tl.to(header, { opacity: 1, y: 0, duration: 0.35 })
-        .to(card1, { opacity: 1, y: 0, duration: 0.6 }, '+=0.05')
-        .to(card2, { opacity: 1, y: 0, duration: 0.6 }, '+=0.1')
-        .to(card3, { opacity: 1, y: 0, duration: 0.6 }, '+=0.1');
+        .to(card1, { opacity: 1, y: 0, duration: 0.55 }, '+=0.05')
+        .to(card2, { opacity: 1, y: 0, duration: 0.55 }, '+=0.1')
+        .to(card3, { opacity: 1, y: 0, duration: 0.55 }, '+=0.1');
 
       return () => {
         tl.kill();
@@ -123,14 +120,14 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onSelectCategory }
         });
       };
     } else {
-      // Mobile: Individual scroll-triggered reveals as user scrolls through each card
+      // Mobile reveals
       const cards = [card1, card2, card3];
       const anims: gsap.core.Tween[] = [];
 
       cards.forEach((card) => {
         const anim = gsap.fromTo(
           card,
-          { opacity: 0, y: 25 },
+          { opacity: 0, y: 20 },
           {
             opacity: 1,
             y: 0,
@@ -159,31 +156,31 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onSelectCategory }
   return (
     <section
       ref={sectionRef}
-      className="relative w-full min-h-screen bg-slate-950 flex flex-col justify-center items-center overflow-hidden py-20 px-4 sm:px-6 lg:px-8 z-20"
+      className="relative w-full min-h-screen bg-slate-950 flex flex-col justify-center items-center overflow-hidden py-16 sm:py-20 px-4 sm:px-6 lg:px-8 z-20"
     >
       {/* Background Architectural Ambient Visual */}
       <img
         src="/images/exterior_building.jpg"
         alt="Crescent Developments luxury residential architecture"
-        className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none opacity-30 will-change-transform"
+        className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none opacity-25 will-change-transform"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/75 to-slate-950/85 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-slate-950/90 pointer-events-none" />
 
       {/* Section Header */}
-      <div ref={headerRef} className="relative z-10 text-center max-w-2xl mx-auto mb-8 sm:mb-12">
+      <div ref={headerRef} className="relative z-10 text-center max-w-xl mx-auto mb-8 sm:mb-10">
         <span className="text-[11px] font-bold tracking-[0.25em] uppercase text-[#e3c29b] font-mono">
           Residential Collections
         </span>
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-editorial font-medium text-white mt-2 leading-tight">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-editorial font-medium text-white mt-1.5 leading-tight">
           Crafted for Every Lifestyle
         </h2>
-        <p className="mt-2.5 text-xs sm:text-sm text-slate-300 font-light max-w-md mx-auto">
-          Click or swipe on any photograph to reveal collection details and specifications.
+        <p className="mt-2 text-xs sm:text-sm text-slate-300 font-light max-w-sm mx-auto">
+          Tap any residence to explore specifications and curated floor plans.
         </p>
       </div>
 
-      {/* 3 Interactive Cards Container */}
-      <div className="relative z-10 max-w-7xl w-full mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-7">
+      {/* 3 Compact, Simple & Clean Cards */}
+      <div className="relative z-10 max-w-5xl w-full mx-auto grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
         {categories.map((cat) => {
           const Icon = cat.icon;
           const isRevealed = Boolean(revealedCards[cat.id]);
@@ -204,13 +201,12 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onSelectCategory }
                 if (start) {
                   const deltaX = Math.abs(e.changedTouches[0].clientX - start.x);
                   const deltaY = Math.abs(e.changedTouches[0].clientY - start.y);
-                  // Trigger on tap or swipe gesture on the card
                   if (deltaX > 20 || deltaY > 20 || deltaY < 12) {
                     toggleCardReveal(cat.id);
                   }
                 }
               }}
-              className="group relative h-[440px] sm:h-[480px] lg:h-[510px] rounded-2xl overflow-hidden shadow-2xl border border-white/10 hover:border-[#c69a68]/50 transition-all duration-300 cursor-pointer will-change-transform select-none"
+              className="group relative h-[330px] sm:h-[350px] lg:h-[370px] rounded-2xl overflow-hidden shadow-xl border border-white/10 hover:border-[#c69a68]/60 transition-all duration-300 cursor-pointer will-change-transform select-none"
               role="button"
               tabIndex={0}
               aria-expanded={isRevealed}
@@ -221,62 +217,70 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onSelectCategory }
                 }
               }}
             >
-              {/* Full-bleed Distinct Architectural Photo */}
+              {/* Distinct Architectural Photography */}
               <img
                 src={cat.image}
                 alt={`${cat.title} by Crescent Developments`}
-                className={`absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 ${
-                  isRevealed ? 'scale-110 filter brightness-50' : 'group-hover:scale-105'
+                className={`absolute inset-0 w-full h-full object-cover object-center transition-all duration-700 ${
+                  isRevealed
+                    ? 'scale-108 brightness-40 blur-[1px]'
+                    : 'group-hover:scale-105 brightness-95'
                 }`}
                 loading="lazy"
               />
 
-              {/* Cinematic Vignettes */}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-slate-950/40 pointer-events-none" />
+              {/* Subtle Ambient Contrast Vignette */}
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/20 pointer-events-none" />
 
-              {/* Unrevealed View: Clean Luxury Photo Presentation (Text Hidden) */}
+              {/* Clean Front Presentation: Minimalist Floating Bottom Pill */}
               <div
-                className={`absolute inset-0 p-6 sm:p-7 flex flex-col justify-between transition-opacity duration-300 pointer-events-none ${
-                  isRevealed ? 'opacity-0' : 'opacity-100'
+                className={`absolute inset-x-3.5 bottom-3.5 p-3 rounded-xl bg-slate-950/70 backdrop-blur-md border border-white/15 flex items-center justify-between transition-all duration-300 ${
+                  isRevealed
+                    ? 'opacity-0 translate-y-2 pointer-events-none'
+                    : 'opacity-100 translate-y-0 group-hover:bg-slate-950/85 group-hover:border-white/25'
                 }`}
               >
-                {/* Top Badge: Category Title & Icon */}
-                <div className="flex items-center justify-between w-full">
-                  <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-950/65 backdrop-blur-md border border-white/15 shadow-lg">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
                     <Icon className={`w-4 h-4 ${cat.iconColor}`} />
-                    <span className="text-xs font-semibold tracking-wide text-white">
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-xs sm:text-sm font-semibold text-white tracking-wide truncate">
                       {cat.title}
+                    </h3>
+                    <span className="text-[10px] text-[#e3c29b] font-mono tracking-wider">
+                      {cat.metric}
                     </span>
                   </div>
-
-                  <span className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white/80 group-hover:bg-[#c69a68] group-hover:text-white transition-colors shadow-md">
-                    <Sparkles className="w-3.5 h-3.5" />
-                  </span>
                 </div>
 
-                {/* Bottom Prompt: Click or swipe to reveal */}
-                <div className="flex items-center justify-between pt-4 border-t border-white/15">
-                  <span className="text-xs font-medium tracking-wide text-white/90 drop-shadow-md">
-                    Click or swipe to view details
-                  </span>
-                  <div className="w-7 h-7 rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center text-white group-hover:translate-y-[-2px] transition-transform">
-                    <ChevronUp className="w-4 h-4" />
-                  </div>
+                <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-white/90 group-hover:bg-[#c69a68] group-hover:text-white transition-all shrink-0">
+                  <ArrowUpRight className="w-3.5 h-3.5" />
                 </div>
               </div>
 
-              {/* Revealed View: Rich Glassmorphic Text Card (Slides/Fades in on click or swipe) */}
+              {/* Smooth Slide-Up Glass Drawer (Rich Details revealed on click/swipe) */}
               <div
-                className={`absolute inset-0 p-6 sm:p-7 bg-slate-950/90 backdrop-blur-md flex flex-col justify-between text-white transition-all duration-400 ease-out ${
+                className={`absolute inset-0 p-5 sm:p-6 bg-slate-950/90 backdrop-blur-md flex flex-col justify-between text-white transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                   isRevealed
                     ? 'opacity-100 translate-y-0 pointer-events-auto'
-                    : 'opacity-0 translate-y-4 pointer-events-none'
+                    : 'opacity-0 translate-y-full pointer-events-none'
                 }`}
               >
-                {/* Header row with Icon and Close Button */}
-                <div className="flex items-start justify-between">
-                  <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center shadow-lg">
-                    <Icon className={`w-6 h-6 ${cat.iconColor} stroke-[1.8]`} />
+                {/* Header row with Icon, Title and Close Button */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-white/10 border border-white/15 flex items-center justify-center">
+                      <Icon className={`w-4 h-4 ${cat.iconColor}`} />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-white tracking-wide">
+                        {cat.title}
+                      </h4>
+                      <span className="text-[9px] font-mono uppercase tracking-widest text-[#e3c29b]">
+                        {cat.subtitle}
+                      </span>
+                    </div>
                   </div>
 
                   <button
@@ -284,45 +288,36 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onSelectCategory }
                       e.stopPropagation();
                       toggleCardReveal(cat.id);
                     }}
-                    className="p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white/80 hover:text-white transition-colors"
-                    aria-label="Hide details"
+                    className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-white/80 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                    aria-label="Close details"
                   >
-                    <X className="w-5 h-5" />
+                    <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
 
-                {/* Main Revealed Text Content */}
-                <div className="my-auto py-4">
-                  <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#e3c29b] font-mono">
-                    {cat.subtitle}
-                  </span>
-                  <h3 className="text-2xl sm:text-3xl font-editorial font-medium text-white mt-1.5 leading-tight">
-                    {cat.title}
-                  </h3>
-
-                  <p className="mt-3 text-xs sm:text-[13px] text-slate-200/90 font-light leading-relaxed">
+                {/* Body Content */}
+                <div className="py-2">
+                  <p className="text-xs text-slate-200/90 font-light leading-relaxed">
                     {cat.description}
                   </p>
 
-                  {/* Golden Hairline Divider */}
-                  <div className="w-14 h-px bg-[#c69a68] my-4" />
+                  <div className="w-10 h-px bg-[#c69a68] my-3" />
 
-                  {/* Spec / Metric */}
-                  <div className="text-xs font-semibold tracking-wider text-[#e3c29b] uppercase font-mono">
+                  <div className="text-[11px] font-semibold tracking-wider text-[#e3c29b] font-mono uppercase">
                     {cat.metric}
                   </div>
                 </div>
 
-                {/* Bottom Action Button */}
+                {/* Action CTA Button */}
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     onSelectCategory(cat.id);
                   }}
-                  className="w-full py-3 px-4 bg-[#c69a68] hover:bg-[#b88c58] active:bg-[#a97c48] text-white text-xs font-semibold rounded-lg shadow-xl shadow-amber-950/40 flex items-center justify-center gap-2 transition-all cursor-pointer group/btn"
+                  className="w-full py-2.5 px-3 bg-[#c69a68] hover:bg-[#b88c58] active:bg-[#a97c48] text-white text-xs font-semibold rounded-lg shadow-lg flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                 >
-                  <span>Explore {cat.title}</span>
-                  <ArrowUpRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+                  <span>Explore Collection</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
