@@ -1,0 +1,8 @@
+{
+  "name": "Crescent Developments",
+  "description": "Discover premium residential communities designed for contemporary living by Crescent Developments. Luxury residences, urban living, and waterfront homes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
