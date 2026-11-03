@@ -276,6 +276,14 @@ export const ApartmentScrollTour: React.FC = () => {
     <section id="interior-tour" ref={containerRef} className="relative w-full h-[380vh] bg-slate-950">
       {/* Sticky Fullscreen Canvas Viewport */}
       <div className="sticky top-0 w-full h-screen overflow-hidden">
+        {/* Instant Full-bleed Frame 1 Preview (eliminates any black screen before canvas loads) */}
+        <img
+          src="/frames/frame_00001.jpg"
+          alt="Luxury apartment interior living area"
+          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
+          loading="eager"
+        />
+
         {/* Fullscreen Video Canvas */}
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block" />
 

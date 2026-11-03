@@ -35,6 +35,16 @@ export default function App() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
+    if (sectionId === 'interior-tour') {
+      const elem = document.getElementById('interior-tour');
+      if (elem) {
+        window.scrollTo({
+          top: elem.offsetTop,
+          behavior: 'smooth',
+        });
+        return;
+      }
+    }
     const elem = document.getElementById(sectionId);
     if (elem) {
       const navOffset = 70;
